@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Woops</h2>
+<p>
+  Il semble qu'il y a un souci avec l'adresse mail, quelque chose n'a pas fonctionné. Voici l'erreur rencontrée :
+  <pre>
+    {{ error }}
+  </pre>
+</p>
+<p>
+  <a href="/">Recommencer.</a>
+</p>
+<p>
+  Si l'adresse mail est bonne mais que le souci persiste, appelle quelqu'un à l'aide (dom) !
+</p>
+{% endblock %}

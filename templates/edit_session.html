@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Créer/modifier un rendez-vous</h2>
+<p>
+  <form method="POST">
+    Où : <input name="place" value="{{ session.place }}"></input>
+    Quand : <input name="when" type="datetime-local" value="{{ session.when }}"></input>
+    Session publique ? <input name="public" type="checkbox" {{ "checked" if session.public == True else '' }}></input><br/>
+    Nombre max de participants : <input name="max_attendees" type="number" value="{{ session.max_attendees }}"></input>
+    Notes : <textarea name="notes">{{ session.notes }}</textarea>
+    Participants :
+    <ul>
+      {% for attendee in session.attendees %}
+      <li>{{ attendee.member.name }}</li>
+      {% endfor %}
+    </ul>
+    <input type="submit" value="Enregistrer">
+    <input class="warning" type="submit" name="delete" value="Supprimer la session"
+	   onclick="return confirm('Supprimer ?')">
+  </form>
+</p>
+{% endblock %}

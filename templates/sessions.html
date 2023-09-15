@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+{% for session in sessions %}
+{% set participation = SessionAttendee.get_or_none(SessionAttendee.member == member, SessionAttendee.session == session) %}
+{% set session_date = session.when.strftime('%A %d %B %Y, %H:%M') %}
+<div class="session">
+  <h3>
+    {% if member.admin or participation and participation.lead %}
+    <a href="{{ url_for('edit_session', uuid=member.uuid, session_id=session.id) }}">{{ session_date }}</a>
+    {% else %}
+    {{ session_date }}
+    {% endif %}
+    <br/>{{ session.place }}
+  </h3>
+  <form method="POST">
+    <input type="hidden" name="session_id" value="{{ session.id }}"></input>
+    {% if participation %}
+    <input type="submit" class="warning" value="Je ne participe plus"></input>
+    {% else %}
+    <input type="submit" value="Je participe !"></input>
+    {% endif %}
+  </form>
+  <ul>
+    {% if session.max_attendees %}
+    <li>max {{ session.max_attendees }}</li>
+    {% endif %}
+    <li>avec
+      {% for attendee in session.attendees %}
+      {% if not loop.first %} / {% endif %}
+      {% if attendee.member == member %}
+      <b>{{ attendee.member.name }}</b>
+      {% else %}
+      {{ attendee.member.name }}
+      {% endif %}
+      {% if attendee.lead %}
+      ({% if attendee.member.phone %}{{ attendee.member.phone }} - {% endif %}{{ attendee.member.email }})
+      {% endif %}
+      {% endfor %}
+    </li>
+    {% if session.notes %}
+    <li>
+      {{ session.notes }}
+    </li>
+    {% endif %}
+    {% if session.public %}
+    <li>
+      Session publique !
+    </li>
+    {% endif %}
+  </ul>
+</div>
+{% endfor %}
+
+<a href="{{ url_for('edit_session', uuid=member.uuid) }}">Créer une session</a>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Mon profil ({{ member.email }})</h2>
+<p>
+  Quelques infos à positionner ici :
+</p>
+<p>
+  <form method="POST">
+    Nom : <input name="name" value="{{ member.name }}"></input>
+    Téléphone : <input name="phone" value="{{ member.phone }}"></input>
+    Présentation/instrument(s) joué(s) : <textarea name="infos">{{ member.infos }}</textarea>
+    <input type="submit" value="Enregistrer"></input>
+  </form>
+</p>
+{% endblock %}
