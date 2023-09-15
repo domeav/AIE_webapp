@@ -30,8 +30,9 @@ def _db_close(exc):
     
 
 def send_mail(recipient, uuid):
-    connection = smtplib.SMTP_SSL(local_settings.SMTP_HOST,
-                                  local_settings.SMTP_PORT)
+    connection = smtplib.SMTP(local_settings.SMTP_HOST,
+                              local_settings.SMTP_PORT)
+    connection.starttls()
     connection.set_debuglevel(True)
     connection.login(local_settings.SMTP_USER,
                      local_settings.SMTP_PASSWD)
