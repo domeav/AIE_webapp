@@ -38,5 +38,5 @@ class SessionAttendee(Model):
     class Meta:
         database = db
 
-    
+
 db.create_tables([Member, Membership, Session, SessionAttendee])

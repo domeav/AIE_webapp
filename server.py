@@ -20,9 +20,9 @@ locale.setlocale(locale.LC_ALL, 'fr_FR.utf8')
 
 @app.before_request
 def _db_connect():
-    db.connect()
+    db.connect(reuse_if_open=True)
 
-    
+
 @app.teardown_request
 def _db_close(exc):
     if not db.is_closed():
@@ -156,7 +156,5 @@ def create_member(uuid):
 @app.route('/<uuid>/members/')
 def members(uuid):
     member = Member.get(Member.uuid == uuid)
-    if not member.admin:
-        abort(401)
     members = Member.select().order_by(fn.Lower(Member.name))
     return render_template("members.html", member=member, members=members)

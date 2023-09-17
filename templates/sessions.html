@@ -3,7 +3,7 @@
 {% for session in sessions %}
 {% set participation = SessionAttendee.get_or_none(SessionAttendee.member == member, SessionAttendee.session == session) %}
 {% set session_date = session.when.strftime('%A %d %B %Y, %H:%M') %}
-<div class="session">
+<div class="session {{'public' if session.public }}">
   <h3>
     {% if member.admin or participation and participation.lead %}
     <a href="{{ url_for('edit_session', uuid=member.uuid, session_id=session.id) }}">{{ session_date }}</a>

@@ -3,11 +3,29 @@
 <h2>Les membres</h2>
 <p>
   <ul>
-    {% for member in members %}
-    <li><a href="{{ url_for('profile', uuid=member.uuid) }}">{{ member.name }} ({{ member.email }})</a></li>
+    {% for p in members %}
+    <li>
+      <h4>
+	{% if member.admin %}
+	<a href="{{ url_for('profile', uuid=p.uuid) }}">{{ p.name }}</a>
+	{% else %}
+	{{ p.name }}
+	{% endif %}
+      </h4>
+      <ul>
+	{% for attr in p.email, p.phone, p.infos %}
+	{% if attr %}
+	<li>
+	  {{ attr }}
+	</li>
+	{% endif %}
+	{% endfor %}
+      </ul>
+    </li>
     {% endfor %}
   </ul>
 </p>
+{% if member.admin %}
 <form action="{{ url_for('create_member', uuid=member.uuid) }}" method="POST">
   Ajouter un membre :
   <p>
@@ -15,4 +33,5 @@
     <input type="submit" value="Créer"></input>
   </p>
 </form>
+{% endif %}
 {% endblock %}
