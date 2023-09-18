@@ -158,7 +158,10 @@ def create_member(uuid):
     member = Member.get(Member.uuid == uuid)
     if not member.admin:
         abort(401)
-    new_member = Member.create(uuid=uuid4(), email=request.form.get('email'))
+    emailinfo = validate_email(request.form.get('email'),
+                               check_deliverability=True)
+    email = emailinfo.normalized
+    new_member = Member.create(uuid=uuid4(), email=email)
     new_member.save()
     return redirect(url_for('profile', uuid=new_member.uuid))
 
