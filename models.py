@@ -1,7 +1,7 @@
 from peewee import *
 from playhouse.pool import SqliteDatabase
 
-db = SqliteDatabase('aie.db')
+db = SqliteDatabase('aie.db', pragmas={'foreign_keys': 1})
 
 
 class Member(Model):
@@ -16,7 +16,8 @@ class Member(Model):
 
 
 class Membership(Model):
-    member = ForeignKeyField(Member, index=True, backref='memberships')
+    member = ForeignKeyField(Member, index=True, backref='memberships', on_delete="CASCADE")
+    year = IntegerField()
     class Meta:
         database = db
 
@@ -27,13 +28,14 @@ class Session(Model):
     notes = TextField(default='')
     public = BooleanField(default=False)
     max_attendees = IntegerField()
+    confirmed = BooleanField(default=True)
     class Meta:
         database = db
 
     
 class SessionAttendee(Model):    
-    session = ForeignKeyField(Session, index=True, backref='attendees')
-    member = ForeignKeyField(Member)
+    session = ForeignKeyField(Session, index=True, backref='attendees', on_delete="CASCADE")
+    member = ForeignKeyField(Member, on_delete="CASCADE")
     lead = BooleanField()
     class Meta:
         database = db

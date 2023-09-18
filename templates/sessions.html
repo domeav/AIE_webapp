@@ -5,6 +5,12 @@
 {% set session_date = session.when.strftime('%A %d %B %Y, %H:%M') %}
 <div class="session {{'public' if session.public }}">
   <h3>
+    {% if not session.confirmed %}
+    [ PAS CONFIRMÉ ]
+    {% endif %}
+    {% if session.public %}
+    [ SESSION PUBLIQUE ]
+    {% endif %}
     {% if member.admin or participation and participation.lead %}
     <a href="{{ url_for('edit_session', uuid=member.uuid, session_id=session.id) }}">{{ session_date }}</a>
     {% else %}
@@ -27,6 +33,7 @@
     <li>avec
       {% for attendee in session.attendees %}
       {% if not loop.first %} / {% endif %}
+      {% if not session.max_attendees or loop.index <= session.max_attendees %}      
       {% if attendee.member == member %}
       <b>{{ attendee.member.name }}</b>
       {% else %}
@@ -34,6 +41,9 @@
       {% endif %}
       {% if attendee.lead %}
       ({% if attendee.member.phone %}{{ attendee.member.phone }} - {% endif %}{{ attendee.member.email }})
+      {% endif %}
+      {% else %}
+      {{ attendee.member.name }} (en liste d'attente)
       {% endif %}
       {% endfor %}
     </li>

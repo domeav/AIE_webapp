@@ -102,10 +102,10 @@ def sessions(uuid):
     if request.method == 'POST':
         session_id = request.form.get('session_id')
         try:
-            attendee = SessionAttendee.get(SessionAttendee.member == member, SessionAttendee.session == session_id)
+            attendee = SessionAttendee.get(SessionAttendee.member_id == member.id, SessionAttendee.session_id == session_id)
             attendee.delete_instance()
         except DoesNotExist:
-            attendee = SessionAttendee(session=session_id, member=member, lead=False)
+            attendee = SessionAttendee(session=session_id, member_id=member.id, lead=False)
             attendee.save()
         return redirect(url_for("sessions", uuid=uuid))
     sessions = Session.select().where(Session.when > datetime.now().date()).order_by(Session.when.asc())
@@ -124,7 +124,8 @@ def edit_session(uuid, session_id=None):
     else:
         session = Session()
     if request.method == 'GET':
-        return render_template('edit_session.html', member=member, session=session)
+        members = Member.select().order_by(fn.Lower(Member.name))
+        return render_template('edit_session.html', member=member, session=session, members=members)
     elif request.method == 'POST':
         if 'delete' in request.form:
             session.delete_instance()
@@ -133,11 +134,20 @@ def edit_session(uuid, session_id=None):
             session.when = datetime.fromisoformat(request.form.get('when'))
             session.notes = request.form.get('notes')
             session.max_attendees = request.form.get('max_attendees')
-            session.public = 'public' in request.form        
+            session.confirmed = 'confirmed' in request.form
+            session.public = 'public' in request.form
             session.save()
-            if len(session.attendees) == 0:
-                attendee = SessionAttendee(session=session, member=member, lead=True)
+            if request.form.get('lead'):
+                try:
+                    attendee = SessionAttendee.get(SessionAttendee.member_id == request.form.get('lead'),
+                                                   SessionAttendee.session == session)
+                    attendee.lead = True
+                except DoesNotExist:
+                    attendee = SessionAttendee(session=session, member_id=request.form.get('lead'), lead=True)
                 attendee.save()
+            elif len(session.attendees) == 0:
+                attendee = SessionAttendee(session=session, member=member, lead=True)
+                attendee.save()                
         return redirect(url_for('sessions', uuid=uuid))
     else:
         raise NotImplementedError()

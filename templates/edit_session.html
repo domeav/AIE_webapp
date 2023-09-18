@@ -3,17 +3,25 @@
 <h2>Créer/modifier un rendez-vous</h2>
 <p>
   <form method="POST">
-    Où : <input name="place" value="{{ session.place }}"></input>
-    Quand : <input name="when" type="datetime-local" value="{{ session.when }}"></input>
+    Où : <input name="place" value="{{ session.place }}"></input><br/>
+    Quand : <input name="when" type="datetime-local" value="{{ session.when }}"></input><br/>
+    Plan confirmé ? <input name="confirmed" type="checkbox" {{ "checked" if session.confirmed == True else '' }}></input>
     Session publique ? <input name="public" type="checkbox" {{ "checked" if session.public == True else '' }}></input><br/>
-    Nombre max de participants : <input name="max_attendees" type="number" value="{{ session.max_attendees }}"></input>
-    Notes : <textarea name="notes">{{ session.notes }}</textarea>
+    Nombre max de participants : <input name="max_attendees" type="number" value="{{ session.max_attendees }}"></input><br/>
+    Notes : <textarea name="notes">{{ session.notes }}</textarea><br/>
+    Ajouter un responsable pour ce plan (le créateur par défaut) :
+    <select name="lead">
+      <option value="">-</option>
+      {% for m in members %}      
+      <option value="{{ m.id }}">{{ m.name }}</option>
+      {% endfor %}
+    </select>
     Participants :
     <ul>
       {% for attendee in session.attendees %}
-      <li>{{ attendee.member.name }}</li>
+      <li>{{ attendee.member.name }} {% if attendee.lead %}(responsable){% endif %}</li>
       {% endfor %}
-    </ul>
+    </ul><br/>
     <input type="submit" value="Enregistrer">
     <input class="warning" type="submit" name="delete" value="Supprimer la session"
 	   onclick="return confirm('Supprimer ?')">
