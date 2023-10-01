@@ -6,7 +6,7 @@ db = SqliteDatabase('aie.db', pragmas={'foreign_keys': 1})
 
 class Member(Model):
     uuid = UUIDField(index=True, unique=True)
-    name = CharField(unique=True, default='')
+    name = CharField(default='')
     email = CharField(index=True, unique=True, default='')
     phone = CharField(default='')
     infos = TextField(default='')

@@ -70,13 +70,13 @@ def index(uuid):
         try:
             emailinfo = validate_email(request.form.get('email'),
                                        check_deliverability=True)
-            email = emailinfo.normalized
+            email = emailinfo.normalized.lower()
             try:
                 member = Member.get(Member.email == email)
             except DoesNotExist:
                 member = Member.create(uuid=uuid4(), email=email)
                 member.save()
-            send_mail(emailinfo.normalized, uuid=member.uuid)            
+            send_mail(email, uuid=member.uuid)
             return render_template('ok.html')
         except Exception:
             return render_template('error.html', error=traceback.format_exc())
@@ -160,7 +160,7 @@ def create_member(uuid):
         abort(401)
     emailinfo = validate_email(request.form.get('email'),
                                check_deliverability=True)
-    email = emailinfo.normalized
+    email = emailinfo.normalized.lower()
     new_member = Member.create(uuid=uuid4(), email=email)
     new_member.save()
     return redirect(url_for('profile', uuid=new_member.uuid))

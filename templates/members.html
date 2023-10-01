@@ -7,7 +7,7 @@
     <li>
       <h4>
 	{% if member.admin %}
-	<a href="{{ url_for('profile', uuid=p.uuid) }}">{{ p.name }}</a>
+	<a href="{{ url_for('profile', uuid=p.uuid) }}">{{ p.name or p.email }}</a>
 	{% else %}
 	{{ p.name }}
 	{% endif %}
