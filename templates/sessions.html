@@ -21,9 +21,9 @@
   <form method="POST">
     <input type="hidden" name="session_id" value="{{ session.id }}"></input>
     {% if participation %}
-    <input type="submit" class="warning" value="Je ne participe plus"></input>
+    <input type="submit" class="warning" value="Actuellement inscrit·e à cette session. Cliquez pour annuler la participation."></input>
     {% else %}
-    <input type="submit" value="Je participe !"></input>
+    <input type="submit" value="Pas inscrit·e à cette session. Cliquez pour participer !"></input>
     {% endif %}
   </form>
   <ul>
