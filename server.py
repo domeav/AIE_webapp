@@ -8,7 +8,7 @@ from flask import Flask, render_template, request, url_for, redirect, abort
 from email_validator import validate_email, EmailNotValidError
 from models import db, DoesNotExist, Member, Membership, Session, SessionAttendee, fn
 from uuid import uuid4
-from datetime import datetime
+from datetime import datetime, date
 import traceback
 import locale
 
@@ -109,7 +109,7 @@ def sessions(uuid):
             attendee.save()
         return redirect(url_for("sessions", uuid=uuid))
     sessions = Session.select().where(Session.when > datetime.now().date()).order_by(Session.when.asc())
-    return render_template('sessions.html', sessions=sessions, uuid=uuid, member=member, SessionAttendee=SessionAttendee)
+    return render_template('sessions.html', sessions=sessions, uuid=uuid, member=member, SessionAttendee=SessionAttendee, today=date.today())
 
 
 @app.route('/<uuid>/edit_session/<session_id>/', methods=['GET', 'POST'])

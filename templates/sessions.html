@@ -18,6 +18,9 @@
     {% endif %}
     <br/>{{ session.place }}
   </h3>
+  {% if (session.when.date() - today).days >= 35 %}
+  <b>(inscriptions possibles 35 jours avant le rendez-vous)</b>
+  {% else %}
   <form method="POST">
     <input type="hidden" name="session_id" value="{{ session.id }}"></input>
     {% if participation %}
@@ -26,6 +29,9 @@
     <input type="submit" value="Pas inscrit·e à cette session. Cliquez pour participer !"></input>
     {% endif %}
   </form>
+  
+
+  {% endif %}
   <ul>
     {% if session.max_attendees %}
     <li>max {{ session.max_attendees }}</li>
